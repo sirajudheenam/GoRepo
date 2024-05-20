@@ -1,0 +1,18 @@
+[
+    {
+        "path": "/ttt",
+        "url": "https://technotipstoday.dev"
+    },
+    {
+        "path": "/tttblog",
+        "url": "https://blog.technotipstoday.dev"
+    },
+    {
+        "path": "/medium",
+        "url": "https://medium.com/technotipstoday"
+    },
+    {
+        "path": "/yt",
+        "url": "https://youtube.com/technotipstoday"
+    }
+]

@@ -1,0 +1,4 @@
+- path: /ggl
+  url: https://google.com
+- path: /twtr
+  url: https://x.com
