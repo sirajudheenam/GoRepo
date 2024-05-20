@@ -37,19 +37,19 @@ go env
 GO111MODULE="off"
 GOARCH="arm64"
 GOBIN=""
-GOCACHE="/Users/sam/Library/Caches/go-build"
-GOENV="/Users/sam/Library/Application Support/go/env"
+GOCACHE="${HOME}/Library/Caches/go-build"
+GOENV="${HOME}/Library/Application Support/go/env"
 GOEXE=""
 GOEXPERIMENT=""
 GOFLAGS=""
 GOHOSTARCH="arm64"
 GOHOSTOS="darwin"
 GOINSECURE=""
-GOMODCACHE="/Users/sam/go/pkg/mod"
+GOMODCACHE="${HOME}/go/pkg/mod"
 GONOPROXY=""
 GONOSUMDB=""
 GOOS="darwin"
-GOPATH="/Users/sam/go"
+GOPATH="${HOME}/go"
 GOPRIVATE=""
 GOPROXY="https://proxy.golang.org,direct"
 GOROOT="/opt/homebrew/Cellar/go/1.20.6/libexec"
@@ -99,7 +99,10 @@ go build . && ./quiz -csv=abc.csv -limit=2
 
 ## Replacing modules
 
+```bash
 go mod edit -replace example.com/greetings=../greetings
-
-go mod edit -replace=github.com/sirajudheenam/goRepo/examples/basics/cmd=./cmd
-go mod edit -replace=github.com/sirajudheenam/goRepo/examples/basics/cmd/root=./cmd/root
+go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/basics/cmd=./cmd
+go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/basics/cmd/root=./cmd/root
+go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/sarpamcli/cmd=./cmd
+go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/sarpamcli/cmd/root=./cmd/root
+```
