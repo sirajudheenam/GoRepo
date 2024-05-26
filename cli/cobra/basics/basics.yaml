@@ -1,0 +1,3 @@
+name: "basics"
+use: "cli"
+description: "Basic CLI commands"

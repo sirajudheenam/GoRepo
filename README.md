@@ -106,3 +106,11 @@ go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/basics/cmd/root=
 go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/sarpamcli/cmd=./cmd
 go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/sarpamcli/cmd/root=./cmd/root
 ```
+
+## Set an go env
+
+```bash
+go env -w GO111MODULE=off
+
+go env | grep GO111MODULE
+```

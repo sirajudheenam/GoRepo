@@ -1,0 +1,13 @@
+name: "config CLI"
+path: "examples/config/config3.yaml"
+description: "Example of a Config CLI configuration"
+tags: ["config", "cli", "example"]
+parameters:
+  - name: "cafile"
+    type: "file"
+    description: "Long description of a input file parameter"
+    required: "yes"
+  - name: "cacert"
+    type: "file"
+    description: "Long description of a output file parameter"
+    required: "yes"
