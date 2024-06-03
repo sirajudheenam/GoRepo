@@ -1,0 +1,6 @@
+host:
+  name: "samubdesktop"
+  ipaddr: "192.168.178.56"
+  port: "22"
+  user: "sam"
+  key: "/Users/i072278/.ssh/id_rsa_16Apr2024"
