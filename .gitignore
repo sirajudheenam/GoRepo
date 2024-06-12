@@ -4,3 +4,6 @@ ldapsearch/insecure-certs/client.crt
 ldapsearch/insecure-certs/client.key
 ldapsearch/insecure-certs/root_ca_key
 ldapsearch/insecure-certs/root_ca.crt
+
+openstack/.envrc
+openstack/config.json
