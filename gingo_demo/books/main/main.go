@@ -8,13 +8,15 @@ import (
 
 func main() {
 	book := &books.Book{
-		Title: "Doomsday Conspiracy",
+		Title:  "Doomsday Conspiracy",
 		Author: "Sidney Sheldon",
-		Pages: 400,
-	  }
+		Pages:  400,
+	}
 	fmt.Println("book.IsValid() = ", book.IsValid())
 	fmt.Println("book.Pages = ", book.Pages)
 	fmt.Println("book.Title = ", book.Title)
 	fmt.Println("book.Author = ", book.Author)
-	
+	fmt.Println("book.FirsttName = ", book.AuthorFirstName())
+	fmt.Println("book.LastName = ", book.AuthorLastName())
+
 }
