@@ -57,9 +57,6 @@ func main() {
 	fmt.Println("EXT is", ext)
 	fmt.Println("Flag is", flag.Args())
 
-	if flags.Args() == [] {
-
-	}
 	var handler, jsonHandler, yamlHandler, mapHandler http.Handler
 	var err error
 
@@ -96,9 +93,9 @@ func main() {
 		}
 		mapHandler = urlshort.MapHandler(pathsToUrls, mux)
 
-	// Build the YAMLHandler using the mapHandler as the
-	// fallback
-	yaml := `
+		// Build the YAMLHandler using the mapHandler as the
+		// fallback
+		yaml := `
 - path: /urlshort
   url: https://github.com/gophercises/urlshort
 - path: /urlshort-final
@@ -126,11 +123,9 @@ func main() {
 	}
 
 	fmt.Println("Starting the server on :8080")
+	fmt.Println("Access the Desired URLs by visiting http://localhost:8080/{ttt|tttblog|medium|yt}")
 	http.ListenAndServe(":8080", handler)
-	
 
-// 	fmt.Println("Starting the server on :8080")
-// 	http.ListenAndServe(":8080", jsonHandler)
 }
 
 func defaultMux() *http.ServeMux {
@@ -138,8 +133,6 @@ func defaultMux() *http.ServeMux {
 	mux.HandleFunc("/", hello)
 	return mux
 }
-
-
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	helloWorldHtml := `<html>
