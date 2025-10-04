@@ -111,6 +111,18 @@ go mod edit -replace=github.com/${YOUR_GIT_USERNAME}/GoRepo/cli/sarpamcli/cmd/ro
 
 ```bash
 go env -w GO111MODULE=off
-
 go env | grep GO111MODULE
 ```
+
+
+# Clean Cache:
+
+```bash
+go clean -cache
+```
+
+
+
+References:
+
+[Nice Cheat Sheet](https://github.com/a8m/golang-cheat-sheet)
