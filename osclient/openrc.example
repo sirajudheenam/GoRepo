@@ -1,0 +1,14 @@
+export OS_AUTH_URL=https://identity-3.domain.tld/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_PROJECT_NAME=<project_name>
+export OS_PROJECT_ID=<project_id>
+export OS_PROJECT_DOMAIN_NAME=<project_domain_name>
+export OS_USERNAME=<username>
+export OS_USER_DOMAIN_NAME=<user_domain_name>
+export OS_PASSWORD=<password>
+export OS_REGION_NAME=<region_name>
+export OS_COMPUTE_API_VERSION=2.60
+export OS_DOMAIN_ID=<domain_id> # hcp03 domain id
+# unset OS_AUTH_URL OS_IDENTITY_API_VERSION OS_PROJECT_NAME OS_PROJECT_ID OS_PROJECT_DOMAIN_NAME OS_USERNAME OS_USER_DOMAIN_NAME OS_PASSWORD OS_REGION_NAME OS_COMPUTE_API_VERSION OS_DOMAIN_ID
+export OS_CLIENT_CONFIG_FILE="./clouds.yaml"
+export OS_CLOUD="cloud_name"
