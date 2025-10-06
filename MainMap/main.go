@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	map "github.com/sirajudheenam/GoRepo/mapPackage"
+
+	myMap "github.com/sirajudheenam/GoRepo/mapPackage"
 )
 
 func main() {
@@ -15,8 +16,9 @@ func main() {
 	}
 	fmt.Println("Inside main")
 	fmt.Println("CWD: ", pwd)
-	fmt.Println("IntKeyMap: ", map.GetKeyIntValString())
-	fmt.Println("StringKeyMap: ", map.GetKeyStringValStringMap())
-	map.CreateMap()
+	fmt.Println("IntKeyMap: ", myMap.GetKeyIntValString())
+	fmt.Println("StringKeyMap: ", myMap.GetKeyStringValStringMap())
+	myMap.CreateMap()
+	fmt.Println(myMap.PrintYaml())
 	log.Println("Exiting main")
 }

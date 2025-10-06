@@ -31,10 +31,10 @@ func CreateMap() {
 	fmt.Println("m[\"one\"]: ", m["one"])
 	fmt.Println("m[\"two\"]: ", m["two"])
 	fmt.Println("m[\"three\"]: ", m["three"])
-	
+
 }
 
-yamlContent := `apiVersion: v1
+var myYamlContent = `apiVersion: v1
 kind: Pod
 metadata:
   name: mypod
@@ -50,3 +50,7 @@ spec:
 	  ports:
 	  	- containerPort: 8080
 `
+
+func PrintYaml() (yamlContent string) {
+	return fmt.Sprintf("yamlContent %+v", myYamlContent)
+}

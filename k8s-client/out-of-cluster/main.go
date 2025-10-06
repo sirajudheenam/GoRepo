@@ -21,8 +21,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
-	"time"
+	"text/tabwriter"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -60,30 +61,66 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	for {
-		pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
-		if err != nil {
-			panic(err.Error())
-		}
-		fmt.Printf("There are %d pods in the cluster\n", len(pods.Items))
 
-		// Examples for error handling:
-		// - Use helper functions like e.g. errors.IsNotFound()
-		// - And/or cast to StatusError and use its properties like e.g. ErrStatus.Message
-		namespace := "default"
-		pod := "example-xxxxx"
-		_, err = clientset.CoreV1().Pods(namespace).Get(context.TODO(), pod, metav1.GetOptions{})
-		if errors.IsNotFound(err) {
-			fmt.Printf("Pod %s in namespace %s not found\n", pod, namespace)
-		} else if statusError, isStatus := err.(*errors.StatusError); isStatus {
-			fmt.Printf("Error getting pod %s in namespace %s: %v\n",
-				pod, namespace, statusError.ErrStatus.Message)
-		} else if err != nil {
-			panic(err.Error())
-		} else {
-			fmt.Printf("Found pod %s in namespace %s\n", pod, namespace)
-		}
-
-		time.Sleep(10 * time.Second)
+	// print namespaces
+	namespaces, err := clientset.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
 	}
+	// fmt.Printf("\nNameSpaces %+v", namespaces)
+
+	fmt.Printf("\nThere are %d namespaces in the cluster\n", len(namespaces.Items))
+	// set up tabwriter for pretty columns
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(w, "\nNAME\tSTATUS\tAGE")
+
+	for _, ns := range namespaces.Items {
+		age := metav1.Now().Sub(ns.CreationTimestamp.Time).Round(0)
+		fmt.Fprintf(w, "%s\t%s\t%s\n",
+			ns.Name,
+			ns.Status.Phase,
+			age,
+		)
+	}
+
+	w.Flush()
+
+	pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("\nThere are %d pods in the cluster\n", len(pods.Items))
+
+	// set up tabwriter for pretty columns
+	w = tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	fmt.Fprintln(w, "\nNAME\tSTATUS\tAGE")
+
+	for _, pod := range pods.Items {
+		age := metav1.Now().Sub(pod.CreationTimestamp.Time).Round(0)
+		fmt.Fprintf(w, "%s\t%s\t%s\n",
+			pod.Name,
+			pod.Status.Phase,
+			age,
+		)
+	}
+
+	w.Flush()
+
+	// Examples for error handling:
+	// - Use helper functions like e.g. errors.IsNotFound()
+	// - And/or cast to StatusError and use its properties like e.g. ErrStatus.Message
+	namespace := "kube-system"
+	pod := "etcd-minikube"
+	_, err = clientset.CoreV1().Pods(namespace).Get(context.TODO(), pod, metav1.GetOptions{})
+	if errors.IsNotFound(err) {
+		fmt.Printf("\nPod %s in namespace %s not found\n", pod, namespace)
+	} else if statusError, isStatus := err.(*errors.StatusError); isStatus {
+		fmt.Printf("\nError getting pod %s in namespace %s: %v\n",
+			pod, namespace, statusError.ErrStatus.Message)
+	} else if err != nil {
+		panic(err.Error())
+	} else {
+		fmt.Printf("\nFound pod %s in namespace %s\n", pod, namespace)
+	}
+
 }
