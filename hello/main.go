@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/sirajudheenam/goRepo/examples/greetings"
+	"github.com/sapcc/go-bits/logg"
 )
 
 func main() {
@@ -35,4 +36,12 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(message)
+	
+	logg.Info("This is information with Arguments %v : %v", 1, 2)
+
+	logg.ShowDebug = true
+	logg.Debug("This is a DEBUG msg based on ShowDebug FLAG (current Value is: %v)", logg.ShowDebug)
+	logg.Error("This is an Error generated now : %v", "an error occured")
+	const msgType string = "MORE INFO"
+	logg.Other(msgType, "Additional Information given %s", "The sky is high")
 }
