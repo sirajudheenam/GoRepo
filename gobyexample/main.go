@@ -2,56 +2,10 @@ package main
 
 import (
 	"fmt"
-	// exitpackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/exit_package"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/signals"
-	// execingprocess "github.com/sirajudheenam/GoRepo/gobyexample/pkg/execing_process"
-	// spawningprocess "github.com/sirajudheenam/GoRepo/gobyexample/pkg/spawning_process"
-	// contextpackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/context_package"
-	// httpclient "github.com/sirajudheenam/GoRepo/gobyexample/pkg/http_client"
-	// httpserver "github.com/sirajudheenam/GoRepo/gobyexample/pkg/http_server"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/logging"
-	// envvariables "github.com/sirajudheenam/GoRepo/gobyexample/pkg/env_variables"
-	// cmdlinesubcommands "github.com/sirajudheenam/GoRepo/gobyexample/pkg/cmd_line_sub_commands"
-	// cmdlineflags "github.com/sirajudheenam/GoRepo/gobyexample/pkg/cmd_line_flags"
-	// cmdlinearguments "github.com/sirajudheenam/GoRepo/gobyexample/pkg/cmd_line_arguments"
-	// embeddirective "github.com/sirajudheenam/GoRepo/gobyexample/pkg/embed_directive"
-	// tempfilesanddirs "github.com/sirajudheenam/GoRepo/gobyexample/pkg/temp_files_and_dirs"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/directories"
-	// filepaths "github.com/sirajudheenam/GoRepo/gobyexample/pkg/file_paths"
-	// linefilters "github.com/sirajudheenam/GoRepo/gobyexample/pkg/line_filters"
-	// writingfiles "github.com/sirajudheenam/GoRepo/gobyexample/pkg/writing_files"
-	// readingfiles "github.com/sirajudheenam/GoRepo/gobyexample/pkg/reading_files"
-	// base64encoding "github.com/sirajudheenam/GoRepo/gobyexample/pkg/base64_encoding"
-	// sha256hashes "github.com/sirajudheenam/GoRepo/gobyexample/pkg/sha256_hashes"
-	// urlparsing "github.com/sirajudheenam/GoRepo/gobyexample/pkg/url_parsing"
-	// numberparsing "github.com/sirajudheenam/GoRepo/gobyexample/pkg/number_parsing"
-	// randomnumbers "github.com/sirajudheenam/GoRepo/gobyexample/pkg/random_numbers"
-	// timeformatingparsing "github.com/sirajudheenam/GoRepo/gobyexample/pkg/time_formating_parsing"
-	// epochpackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/epoch_package"
-	// timepackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/time_package"
-	// xmlpackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/xml_package"
-	// jsonpackage "github.com/sirajudheenam/GoRepo/gobyexample/pkg/json_package"
-	// regularexpressions "github.com/sirajudheenam/GoRepo/gobyexample/pkg/regular_expressions"
-	// texttemplates "github.com/sirajudheenam/GoRepo/gobyexample/pkg/text_templates"
-	// stringformatting "github.com/sirajudheenam/GoRepo/gobyexample/pkg/string_formatting"
-	// stringfunctions "github.com/sirajudheenam/GoRepo/gobyexample/pkg/string_functions"
-	// recoverfunction "github.com/sirajudheenam/GoRepo/gobyexample/pkg/recover_function"
-	// deferfunction "github.com/sirajudheenam/GoRepo/gobyexample/pkg/defer_function"
-	// sortingbyfunctions "github.com/sirajudheenam/GoRepo/gobyexample/pkg/sorting_by_functions"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/sorting"
-	// statefulgoroutines "github.com/sirajudheenam/GoRepo/gobyexample/pkg/stateful_go_routines"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/mutexes"
-	// atomiccounters "github.com/sirajudheenam/GoRepo/gobyexample/pkg/atomic_counters"
-	// ratelimiting "github.com/sirajudheenam/GoRepo/gobyexample/pkg/rate_limiting"
-	// waitgroups "github.com/sirajudheenam/GoRepo/gobyexample/pkg/wait_groups"
-	// workerpools "github.com/sirajudheenam/GoRepo/gobyexample/pkg/worker_pools"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/tickers"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/arrays"
-	// channelbuffering "github.com/sirajudheenam/GoRepo/gobyexample/pkg/channel_buffering"
-	// channeldirections "github.com/sirajudheenam/GoRepo/gobyexample/pkg/channel_directions"
-	// channelsync "github.com/sirajudheenam/GoRepo/gobyexample/pkg/channel_sync"
-	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/channels"
-	// closingchannels "github.com/sirajudheenam/GoRepo/gobyexample/pkg/closing_channels"
+
+	channeldirections "github.com/sirajudheenam/GoRepo/gobyexample/pkg/channel_directions"
+	"github.com/sirajudheenam/GoRepo/gobyexample/pkg/channels"
+	closingchannels "github.com/sirajudheenam/GoRepo/gobyexample/pkg/closing_channels"
 	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/closures"
 	// "github.com/sirajudheenam/GoRepo/gobyexample/pkg/constants"
 	// customerrors "github.com/sirajudheenam/GoRepo/gobyexample/pkg/custom_errors"
@@ -114,14 +68,15 @@ func main() {
 	// errors.Run()
 	// customerrors.Run()
 	// goroutines.Run()
-	// channels.Run()
+	channels.Run()
+	closingchannels.Run()
+	channeldirections.Run()
 	// channelbuffering.Run()
 	// channelsync.Run()
-	// channeldirections.Run()
+
 	// selectcase.Run()
 	// timeouts.Run()
 	// nonblockingchanneloperations.Run()
-	// closingchannels.Run()
 	// rangeoverchannels.Run()
 	// timers.Run()
 	// tickers.Run()

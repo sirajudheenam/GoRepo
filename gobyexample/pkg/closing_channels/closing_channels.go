@@ -1,23 +1,27 @@
 package closingchannels
 
-// Closing a channel indicates that no more values will be sent on it. This can be useful to communicate completion to the channel’s receivers.
+// Closing a channel indicates that no more values will be sent on it.
+// This can be useful to communicate completion to the channel’s receivers.
 
 import "fmt"
 
-// In this example we’ll use a jobs channel to communicate work to be done from the Run() goroutine to a worker goroutine. When we have no more jobs for the worker we’ll close the jobs channel.
+// In this example we’ll use a jobs channel to communicate work to be done from the Run() goroutine to a worker goroutine.
+// When we have no more jobs for the worker we’ll close the jobs channel.
 
 func Run() {
 	fmt.Println("\nClosing Channels")
 	jobs := make(chan int, 5)
 	done := make(chan bool)
 
-	// Here’s the worker goroutine. It repeatedly receives from jobs with j, more := <-jobs. In this special 2-value form of receive, the more value will be false if jobs has been closed and all values in the channel have already been received. We use this to notify on done when we’ve worked all our jobs.
+	// Here’s the worker goroutine. It repeatedly receives from jobs with j, more := <-jobs. In this special 2-value form of receive,
+	// the more value will be false if jobs has been closed and all values in the channel have already been received.
+	// We use this to notify on done when we’ve worked all our jobs.
 
 	go func() {
 		for {
 			j, more := <-jobs
 			if more {
-				fmt.Println("received job", j)
+				fmt.Printf("received job %d\n", j)
 			} else {
 				fmt.Println("received all jobs")
 				done <- true
@@ -30,7 +34,7 @@ func Run() {
 
 	for j := 1; j <= 3; j++ {
 		jobs <- j
-		fmt.Println("sent job", j)
+		fmt.Printf("sent job %d\n", j)
 	}
 	close(jobs)
 	fmt.Println("sent all jobs")
