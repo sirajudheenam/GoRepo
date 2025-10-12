@@ -43,26 +43,44 @@ func NewMyHTTPClient() *MyHTTPClient {
 	}
 }
 
+// Wrap Each HTTP Method to add logging, headers, context, etc.
+func addCustomHeadersAndContext(ctx context.Context, req *http.Request) (*http.Request, error) {
+	reqID := uuid.New().String()
+	req.Header.Set("X-Request-ID", reqID)
+	req.Header.Set("User-Agent", "MyCustomClient/1.0")
+	return req.WithContext(context.WithValue(ctx, requestIDKey, reqID)), nil
+}
+
 // Custom wrappers around HTTP methods
 func (c *MyHTTPClient) Do(ctx context.Context, req *http.Request) (*http.Response, error) {
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "GET:", req.URL.String())
-	req.Header.Set("User-Agent", "MyCustomClient/1.0")
-	req = req.WithContext(ctx)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "GET:", req.URL.String())
+	req, err := addCustomHeadersAndContext(ctx, req)
+	if err != nil {
+		return nil, err
+	}
 	return c.Client.Do(req)
 }
 
-func (c *MyHTTPClient) Get(ctx context.Context, url string) (*http.Response, error) {
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "GET:", url)
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+func (c *MyHTTPClient) Get(ctx context.Context, myURL string) (*http.Response, error) {
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "GET:", myURL)
+
+	// Parse the string URL to a URL object
+	parsedURL, err := url.Parse(myURL)
 	if err != nil {
 		return nil, err
+	}
+
+	req := &http.Request{
+		URL:    parsedURL,
+		Method: http.MethodGet,
+		Header: make(http.Header),
 	}
 	req.Header.Set("User-Agent", "MyCustomClient/1.0")
 	return c.Do(ctx, req)
 }
 
 func (c *MyHTTPClient) Post(ctx context.Context, url, contentType string, body io.Reader) (*http.Response, error) {
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "POST:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "POST:", url)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
 	if err != nil {
 		return nil, err
@@ -73,7 +91,7 @@ func (c *MyHTTPClient) Post(ctx context.Context, url, contentType string, body i
 }
 
 func (c *MyHTTPClient) Head(ctx context.Context, url string) (*http.Response, error) {
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "HEAD:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "HEAD:", url)
 	req, err := http.NewRequestWithContext(ctx, http.MethodHead, url, nil)
 	if err != nil {
 		return nil, err
@@ -85,7 +103,7 @@ func (c *MyHTTPClient) Head(ctx context.Context, url string) (*http.Response, er
 
 func (c *MyHTTPClient) Put(ctx context.Context, url, contentType string, body io.Reader) (*http.Response, error) {
 	fmt.Println("➡️  Custom PUT called:", url)
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "PUT:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "PUT:", url)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPut, url, body)
 	if err != nil {
 		return nil, err
@@ -98,7 +116,7 @@ func (c *MyHTTPClient) Put(ctx context.Context, url, contentType string, body io
 
 func (c *MyHTTPClient) Delete(ctx context.Context, url string) (*http.Response, error) {
 	fmt.Println("➡️  Custom DELETE called:", url)
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "DELETE:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "DELETE:", url)
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err
@@ -109,7 +127,7 @@ func (c *MyHTTPClient) Delete(ctx context.Context, url string) (*http.Response, 
 
 func (c *MyHTTPClient) Patch(ctx context.Context, url, contentType string, body io.Reader) (*http.Response, error) {
 	fmt.Println("➡️  Custom PATCH called:", url)
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "PATCH:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "PATCH:", url)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, url, body)
 	if err != nil {
 		return nil, err
@@ -126,7 +144,7 @@ func (c *MyHTTPClient) DownloadFile(ctx context.Context, url, dest string) error
 		return err
 	}
 	req.Header.Set("User-Agent", "MyCustomClient/1.0")
-	fmt.Println("Request ID:", ctx.Value(requestIDKey), "Downloading:", url)
+	fmt.Println("ReqID", ctx.Value(requestIDKey), "Downloading:", url)
 
 	resp, err := c.Do(ctx, req)
 	if err != nil {
@@ -197,7 +215,7 @@ func main() {
 	fmt.Println("✅ GET Response:", string(body))
 
 	// === 2. Test POST ===
-	resp, err = client.Post(ctx, "http://localhost:"+PORT+"/api/v1/users", "text/plain", strings.NewReader("Hello from POST"))
+	resp, err = client.Post(ctx, "http://localhost:"+PORT+"/", "text/plain", strings.NewReader("Hello from POST"))
 	if err != nil {
 		fmt.Println("❌ POST Error:", err)
 		return
@@ -207,7 +225,7 @@ func main() {
 	fmt.Println("✅ POST Response:", string(postBody))
 
 	// === 3. Test PUT ===
-	resp, err = client.Put(ctx, "http://localhost:"+PORT+"/api/v1/users", "application/json", strings.NewReader(`{"update":"true"}`))
+	resp, err = client.Put(ctx, "http://localhost:"+PORT+"/", "application/json", strings.NewReader(`{"update":"true"}`))
 	if err != nil {
 		fmt.Println("❌ PUT Error:", err)
 		return
@@ -217,7 +235,7 @@ func main() {
 	fmt.Println("✅ PUT Response:", string(putBody))
 
 	// === 4. Test PATCH ===
-	resp, err = client.Patch(ctx, "http://localhost:"+PORT+"/api/v1/users", "application/json", strings.NewReader(`{"patch":"yes"}`))
+	resp, err = client.Patch(ctx, "http://localhost:"+PORT+"/", "application/json", strings.NewReader(`{"patch":"yes"}`))
 	if err != nil {
 		fmt.Println("❌ PATCH Error:", err)
 		return
@@ -227,7 +245,7 @@ func main() {
 	fmt.Println("✅ PATCH Response:", string(patchBody))
 
 	// === 5. Test DELETE ===
-	resp, err = client.Delete(ctx, "http://localhost:"+PORT+"/api/v1/users")
+	resp, err = client.Delete(ctx, "http://localhost:"+PORT+"/")
 	if err != nil {
 		fmt.Println("❌ DELETE Error:", err)
 		return
@@ -237,7 +255,7 @@ func main() {
 	fmt.Println("✅ DELETE Response:", string(deleteBody))
 
 	// === 6. Test HEAD ===
-	resp, err = client.Head(ctx, "http://localhost:"+PORT+"/api/v1/users")
+	resp, err = client.Head(ctx, "http://localhost:"+PORT+"/")
 	if err != nil {
 		fmt.Println("❌ HEAD Error:", err)
 		return
@@ -276,4 +294,7 @@ func main() {
 		return
 	}
 	fmt.Println("✅ DownloadFile Success: example.pdf downloaded")
+
+	// Cleanup downloaded file
+	os.Remove("example.pdf")
 }
