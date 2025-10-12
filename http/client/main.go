@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -297,4 +300,30 @@ func main() {
 
 	// Cleanup downloaded file
 	os.Remove("example.pdf")
+
+	// === 9. Test HTTPS with TLS ===
+	// Make HTTPS request to test TLS (assuming server supports HTTPS on 8443)
+	certDir := "certs/"
+	cert, _ := tls.LoadX509KeyPair(certDir+"client.crt", certDir+"client.key")
+
+	caCert, _ := os.ReadFile(certDir + "ca.crt")
+	caPool := x509.NewCertPool()
+	caPool.AppendCertsFromPEM(caCert)
+
+	httpsClient := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs:      caPool,
+				Certificates: []tls.Certificate{cert},
+			},
+		},
+	}
+
+	httpsResp, err := httpsClient.Get("https://localhost:8443")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n✅ HTTPS Response Status:", httpsResp.Status)
+	defer httpsResp.Body.Close()
+
 }

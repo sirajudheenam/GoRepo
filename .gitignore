@@ -7,3 +7,9 @@ ldapsearch/insecure-certs/root_ca.crt
 
 openstack/.envrc
 openstack/config.json
+
+http/server/certs/* # ignore all files in certs directory
+http/server/certs
+http/client/certs/* # ignore all files in certs directory
+http/client/certs
+http/client/example.pdf
