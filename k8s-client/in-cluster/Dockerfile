@@ -11,7 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# FROM golang:1.25-alpine AS builder
+# WORKDIR /
+# COPY . .
+# RUN GOOS=linux go build -o /app .
 
-FROM debian
-COPY ./app /app
-ENTRYPOINT ["/app"]
+
+FROM golang:1.25-alpine
+WORKDIR /in-cluster
+COPY ./app /in-cluster/
+# COPY --from=builder /app /app
+ENTRYPOINT [ "/in-cluster/app" ]

@@ -1,4 +1,3 @@
-//https://github.com/kubernetes/client-go/tree/master/examples
 /*
 Copyright 2016 The Kubernetes Authors.
 
@@ -21,8 +20,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"os"
 	"time"
 
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -34,27 +31,21 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth"
 	//
 	// Or uncomment to load specific auth plugins
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/azure"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 )
 
-// kubectl --context p-qa-de-1 -n postfixin logs postfixin-delivery-0 | grep george@jetsons.test.tintuc.de
-// kubectl --context p-qa-de-1 -n postfixin logs postfixin-delivery-0 | grep sirajudheen.mohamed.ali@sap.com
-
 func main() {
-	// Read 
 
-	// os.Getenv("KUBERNETES_SERVICE_HOST")
-	KUBERNETES_SERVICE_HOST := "http://localhost" 
-	os.Setenv("KUBERNETES_SERVICE_HOST", KUBERNETES_SERVICE_HOST)
-	// os.Getenv("KUBERNETES_SERVICE_PORT")
-	KUBERNETES_SERVICE_PORT := 49577
-	os.Setenv("KUBERNETES_SERVICE_PORT", KUBERNETES_SERVICE_PORT)
+	// 	// os.Getenv("KUBERNETES_SERVICE_HOST")
+	// 	KUBERNETES_SERVICE_HOST := "localhost"
+	// 	os.Setenv("KUBERNETES_SERVICE_HOST", KUBERNETES_SERVICE_HOST)
+	// 	// os.Getenv("KUBERNETES_SERVICE_PORT")
+	// 	KUBERNETES_SERVICE_PORT := "49577"
+	// 	os.Setenv("KUBERNETES_SERVICE_PORT", KUBERNETES_SERVICE_PORT)
+
 	// creates the in-cluster config
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		log.Printf("Error: %v\n", err.Error())
 		panic(err.Error())
 	}
 	// creates the clientset
@@ -62,6 +53,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+
 	for {
 		// get pods in all the namespaces by omitting namespace
 		// Or specify namespace to get pods in particular namespace
@@ -74,17 +66,36 @@ func main() {
 		// Examples for error handling:
 		// - Use helper functions e.g. errors.IsNotFound()
 		// - And/or cast to StatusError and use its properties like e.g. ErrStatus.Message
-		_, err = clientset.CoreV1().Pods("default").Get(context.TODO(), "example-xxxxx", metav1.GetOptions{})
+		foundPod, err := clientset.CoreV1().Pods("default").Get(context.TODO(), "my-prometheus-alertmanager-0", metav1.GetOptions{})
 		if errors.IsNotFound(err) {
-			fmt.Printf("Pod example-xxxxx not found in default namespace\n")
+			fmt.Printf("Pod my-prometheus-alertmanager-0 not found in default namespace\n")
 		} else if statusError, isStatus := err.(*errors.StatusError); isStatus {
 			fmt.Printf("Error getting pod %v\n", statusError.ErrStatus.Message)
 		} else if err != nil {
 			panic(err.Error())
 		} else {
-			fmt.Printf("Found example-xxxxx pod in default namespace\n")
+			fmt.Printf("Found my-prometheus-alertmanager-0 pod in default namespace\n")
+			fmt.Printf("POD %s Status: %s\n", foundPod.Name, foundPod.Status.Conditions[0].Status)
 		}
 
-		time.Sleep(10 * time.Second)
+		fmt.Println("PODS STATUS")
+		fmt.Printf("POD_NAME\t\t\t\tNAMESPACE\t\t\t\tSTATUS \n")
+		for _, pod := range pods.Items {
+			fmt.Printf("%s - %s - %s\n", pod.Name, pod.Namespace, pod.Status.Phase)
+		}
+
+		deploy, err := clientset.AppsV1().Deployments("").List(context.TODO(), metav1.ListOptions{})
+		if err != nil {
+			panic(err.Error())
+		}
+		fmt.Printf("There are %d deployments in the cluster\n", len(deploy.Items))
+
+		fmt.Println("DEPLOYMENTS STATUS")
+		fmt.Printf("DEPLOYMENT_NAME\t\t\t\tNAMESPACE\t\t\t\tSTATUS \n")
+		for _, dep := range deploy.Items {
+			fmt.Printf("%s - %s - %s\n", dep.Name, dep.Namespace, &dep.Status.Conditions[0])
+		}
+
+		time.Sleep(30 * time.Second)
 	}
 }

@@ -1,6 +1,6 @@
 module github.com/sirajudheenam/GoRepo/k8s-client/out-of-cluster
 
-go 1.22.2
+go 1.25.3
 
 require (
 	k8s.io/apimachinery v0.30.1
